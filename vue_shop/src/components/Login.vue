@@ -43,8 +43,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: "龚凯真帅",
-        password: "666666"
+        username: "admin",
+        password: "123456"
       },
       loginFormRules: {
         username: [
@@ -68,7 +68,12 @@ export default {
         // console.log(valid);
         if (!valid) return;
        const {data:res}=await this.$http.post("login", this.loginForm);
-       console.log(res);
+      //  console.log(res);
+        if(res.meta.status!=200) return this.$message.error('登录失败');
+        this.$message.success('登录成功');
+
+        window.sessionStorage.setItem('token',res.data.token)
+        this.$router.push('/home')
       });
     }
   }
