@@ -18,6 +18,8 @@
           unique-opened
           :collapse="isCollapse"
           :collapse-transition="false"
+          router
+          default-active="/"
         >
           <!-- 一级菜单 -->
           <el-submenu
@@ -35,9 +37,10 @@
 
             <!-- 二级菜单 -->
             <el-menu-item
-              :index="subItem.id + ''"
+              :index="'/' + subItem.path + ''"
               v-for="subItem in item.children"
               :key="subItem.id"
+              @click="saveNavState('/' + subItem.path + '')"
             >
               <template slot="title">
                 <!-- 图标 -->
@@ -51,7 +54,9 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -88,6 +93,9 @@ export default {
     },
     toggleCollapse() {
       this.isCollapse = !this.isCollapse;
+    },
+    saveNavState(activePath) {
+      window.sessionStorage.setItem("activePath", activePath);
     }
   }
 };
