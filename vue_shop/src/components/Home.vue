@@ -19,7 +19,7 @@
           :collapse="isCollapse"
           :collapse-transition="false"
           router
-          default-active="/"
+          :default-active="activePath"
         >
           <!-- 一级菜单 -->
           <el-submenu
@@ -40,7 +40,7 @@
               :index="'/' + subItem.path + ''"
               v-for="subItem in item.children"
               :key="subItem.id"
-              @click="saveNavState('/' + subItem.path + '')"
+              @click="saveNavState('/' + subItem.path)"
             >
               <template slot="title">
                 <!-- 图标 -->
@@ -67,6 +67,7 @@ export default {
     return {
       // 左侧菜单数据
       menulist: [],
+      // arr:[],
       iconsObj: {
         125: "iconfont icon-user",
         103: "iconfont icon-tijikongjian",
@@ -74,11 +75,15 @@ export default {
         102: "iconfont icon-danju",
         145: "iconfont icon-baobiao"
       },
-      isCollapse: false
+      // 是否折叠
+      isCollapse: false,
+      // 被激活的链接地址
+      activePath: ""
     };
   },
   created() {
     this.getMenuList();
+    this.activePath = window.sessionStorage.getItem("activePath");
   },
   methods: {
     logout() {
@@ -94,8 +99,10 @@ export default {
     toggleCollapse() {
       this.isCollapse = !this.isCollapse;
     },
+
     saveNavState(activePath) {
       window.sessionStorage.setItem("activePath", activePath);
+      this.activePath = activePath;
     }
   }
 };
