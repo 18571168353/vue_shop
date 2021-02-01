@@ -82,7 +82,7 @@
               type="primary"
               size="mini"
               icon="el-icon-edit"
-              @click="showEditDialog(scope.row.id)"
+              @click="showEditDialog(scope.row.roleId)"
               >编辑</el-button
             >
             <el-button
@@ -198,9 +198,6 @@ export default {
           { required: true, message: "请输入角色名称", trigger: "blur" }
         ]
       },
-      editDialogClosed() {
-        this.$refs.editFormRef.resetFields();
-      },
       // 控制修改对话框的显示与隐藏
       editDialogVisible: false,
 
@@ -240,14 +237,18 @@ export default {
       this.rolelist = res.data;
       // console.log(this.rolelist);
     },
-    // 监听对话框关闭事件
+    // 监听添加对话框关闭事件
     addDialogClosed() {
       this.$refs.addFormRef.resetFields();
+    },
+    // 监听修改对话框关闭事件
+    editDialogClosed() {
+      this.$refs.editFormRef.resetFields();
     },
 
     // 展示编辑用户的对话框
     async showEditDialog(id) {
-      console.log(id);
+      // console.log(id);
       const { data: res } = await this.$http.get("roles/" + id);
       if (res.meta.status !== 200) {
         return this.$message.error("查询用户信息失败!");
@@ -376,12 +377,12 @@ export default {
         `roles/${this.roleId}/rights`,
         { rids: idStr }
       );
-      if(res.meta.status!==200){
-        return this.$message.error('分配权限失败!')
+      if (res.meta.status !== 200) {
+        return this.$message.error("分配权限失败!");
       }
-      this.$message.success('分配权限成功!')
-      this.getRolesList()
-      this.setRightDialogVisible=false
+      this.$message.success("分配权限成功!");
+      this.getRolesList();
+      this.setRightDialogVisible = false;
     }
   }
 };

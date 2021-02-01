@@ -314,7 +314,7 @@ export default {
       }
       this.$message.success("更新用户状态成功!");
     },
-    // 监听对话框关闭事件
+    // 监听添加对话框关闭事件
     addDialogClosed() {
       this.$refs.addFormRef.resetFields();
     },
@@ -343,6 +343,7 @@ export default {
       this.editDialogVisible = true;
     },
 
+    // 监听修改对话框关闭事件
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
@@ -415,17 +416,17 @@ export default {
           rid: this.selectedRoleId
         }
       );
-      if(res.meta.status!==200){
-        return this.$message.error('更新角色失败!')
+      if (res.meta.status !== 200) {
+        return this.$message.error("更新角色失败!");
       }
-      this.$message.success('更新角色成功')
-      this.getUserList()
-      this.setRoleDialogVisible=false
+      this.$message.success("更新角色成功");
+      this.getUserList();
+      this.setRoleDialogVisible = false;
     },
     // 监听分配角色对话框的关闭事件
-    setRoleDialogClosed(){
-      this.selectedRoleId=''
-      this.userInfo=''
+    setRoleDialogClosed() {
+      this.selectedRoleId = "";
+      this.userInfo = "";
     }
   }
 };
