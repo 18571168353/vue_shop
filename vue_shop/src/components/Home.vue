@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import hub from '../utils/hub'
 export default {
   data() {
     return {
@@ -84,6 +85,7 @@ export default {
   created() {
     this.getMenuList();
     this.activePath = window.sessionStorage.getItem("activePath");
+    hub.$on('saveNavState',this.saveNavState)
   },
   methods: {
     logout() {
@@ -104,6 +106,10 @@ export default {
       window.sessionStorage.setItem("activePath", activePath);
       this.activePath = activePath;
     }
+  },
+  beforeDestroy(){
+    // 移除事件监听,防止监听多次
+    hub.$off('saveNavState')
   }
 };
 </script>

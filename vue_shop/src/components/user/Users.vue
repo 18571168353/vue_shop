@@ -189,6 +189,7 @@
 </template>
 
 <script>
+import hub from '../../utils/hub.js'
 export default {
   data() {
     // 验证邮箱的规则
@@ -282,6 +283,7 @@ export default {
   },
   created() {
     this.getUserList();
+    hub.$emit('saveNavState','/users')
   },
   methods: {
     async getUserList() {
