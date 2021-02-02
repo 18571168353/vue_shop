@@ -82,7 +82,7 @@
               type="primary"
               size="mini"
               icon="el-icon-edit"
-              @click="showEditDialog(scope.row.roleId)"
+              @click="showEditDialog(scope.row.id)"
               >编辑</el-button
             >
             <el-button
@@ -312,6 +312,10 @@ export default {
         return this.$message.error("删除用户失败!");
       }
       this.$message.success("删除用户成功!");
+      if (document.querySelectorAll(".el-card tbody tr").length === 1) {
+        this.queryInfo.pagenum =
+          this.queryInfo.pagenum > 1 ? this.queryInfo.pagenum - 1 : 1;
+      }
       this.getRolesList();
     },
     // 根据id删除对于的权限

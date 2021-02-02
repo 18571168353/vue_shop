@@ -3,8 +3,8 @@
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      <el-breadcrumb-item>商品管理</el-breadcrumb-item>
+      <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 卡片视图区域 -->
@@ -64,7 +64,7 @@
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            @click="removeRolesById(scope.row.cat_id)"
+            @click="removeCateById(scope.row.cat_id)"
             >删除</el-button
           >
         </template>
@@ -105,7 +105,6 @@
           <!-- options用来指定数据源 -->
           <!-- props用来指定配置对象 -->
           <el-cascader
-            expand-trigger="hover"
             v-model="selectedKeys"
             :options="parentCateList"
             :props="cascaderProps"
@@ -141,7 +140,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editRolesInfo">确 定</el-button>
+        <el-button type="primary" @click="editCateInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -217,7 +216,8 @@ export default {
       cascaderProps: {
         value: "cat_id",
         label: "cat_name",
-        children: "children"
+        children: "children",
+        expandTrigger: 'hover'
       },
       // 选中的父级分类的ID数组
       selectedKeys: [],
@@ -330,7 +330,7 @@ export default {
       this.editForm = res.data;
       this.editDialogVisible = true;
     },
-    editRolesInfo() {
+    editCateInfo() {
       this.$refs.editFormRef.validate(async valid => {
         // console.log(valid);
         if (!valid) return;
@@ -353,7 +353,7 @@ export default {
     },
 
     // 根据ID删除用户的信息
-    async removeRolesById(id) {
+    async removeCateById(id) {
       // 询问用户是否删除
       const confirmResult = await this.$confirm(
         "此操作将永久删除该分类, 是否继续?",
@@ -374,7 +374,11 @@ export default {
         return this.$message.error("删除用户失败!");
       }
       this.$message.success("删除用户成功!");
-      this.queryInfo.pagenum = 1;
+
+      if (document.querySelectorAll(".el-card tbody tr").length === 1) {
+        this.queryInfo.pagenum =
+          this.queryInfo.pagenum > 1 ? this.queryInfo.pagenum - 1 : 1;
+      }
       this.getCateList();
     }
   }
