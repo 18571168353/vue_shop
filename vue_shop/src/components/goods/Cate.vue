@@ -148,7 +148,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       // 查询条件
       queryInfo: {
@@ -163,29 +163,29 @@ export default {
       // 为table指定列的定义
       columns: [
         {
-          label: "分类名称",
-          prop: "cat_name"
+          label: '分类名称',
+          prop: 'cat_name'
         },
         {
-          label: "是否有效",
+          label: '是否有效',
           // 表示当前列定义为模板列
-          type: "template",
+          type: 'template',
           // 表示当前这一列使用的模板名称
-          template: "isok"
+          template: 'isok'
         },
         {
-          label: "排序",
+          label: '排序',
           // 表示当前列定义为模板列
-          type: "template",
+          type: 'template',
           // 表示当前这一列使用的模板名称
-          template: "order"
+          template: 'order'
         },
         {
-          label: "操作",
+          label: '操作',
           // 表示当前列定义为模板列
-          type: "template",
+          type: 'template',
           // 表示当前这一列使用的模板名称
-          template: "opt"
+          template: 'opt'
         }
       ],
       editForm: {},
@@ -198,7 +198,7 @@ export default {
       // 添加分类的表单数据对象
       addCateForm: {
         // 将要添加的分类名称
-        cat_name: "",
+        cat_name: '',
         // 父级分类的ID
         cat_pid: 0,
         // 分类层级,默认是一级分类
@@ -207,16 +207,16 @@ export default {
       // 添加分类表单的验证规则对象
       addCateFormRules: {
         cat_name: [
-          { required: true, message: "请输入分类名称", trigger: "blur" }
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
         ]
       },
       // 父级分类的列表
       parentCateList: [],
       // 指定级联选择器的配置对象
       cascaderProps: {
-        value: "cat_id",
-        label: "cat_name",
-        children: "children",
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children',
         expandTrigger: 'hover'
       },
       // 选中的父级分类的ID数组
@@ -224,165 +224,164 @@ export default {
       // 修改表单的验证
       editFormRules: {
         cat_name: [
-          { required: true, message: "请输入分类名称", trigger: "blur" }
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
         ]
       }
-    };
+    }
   },
-  created() {
-    this.getCateList();
+  created () {
+    this.getCateList()
   },
   methods: {
     //   获取商品分类数据
-    async getCateList() {
-      const { data: res } = await this.$http.get("categories", {
+    async getCateList () {
+      const { data: res } = await this.$http.get('categories', {
         params: this.queryInfo
-      });
+      })
       if (res.meta.status !== 200) {
-        return this.$message.error("获取商品分类失败!");
+        return this.$message.error('获取商品分类失败!')
       }
       //   吧数据列表赋值给catelist
-      this.catelist = res.data.result;
-      this.total = res.data.total;
+      this.catelist = res.data.result
+      this.total = res.data.total
     },
     // 监听pagesize改变的事件
-    handleSizeChange(newSize) {
-      this.queryInfo.pagesize = newSize;
-      this.getCateList();
+    handleSizeChange (newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getCateList()
     },
     // 监听pagenum改变的事件
-    handleCurrentChange(newPage) {
-      this.queryInfo.pagenum = newPage;
-      this.getCateList();
+    handleCurrentChange (newPage) {
+      this.queryInfo.pagenum = newPage
+      this.getCateList()
     },
     // 点击按钮,展示添加分类的对话框
-    showAddCateDialog() {
+    showAddCateDialog () {
       // 先获取父级分类的数据列表
-      this.getParentCateList();
-      this.addCateDialogVisible = true;
+      this.getParentCateList()
+      this.addCateDialogVisible = true
       // 在展示对话框
     },
     // 获取父级分类的数据列表
-    async getParentCateList() {
-      const { data: res } = await this.$http.get("categories", {
+    async getParentCateList () {
+      const { data: res } = await this.$http.get('categories', {
         params: { type: 2 }
-      });
+      })
       if (res.meta.status !== 200) {
-        return this.$message.error("获取父级分类数据失败!");
+        return this.$message.error('获取父级分类数据失败!')
       }
       // console.log(res.data);
-      this.parentCateList = res.data;
+      this.parentCateList = res.data
     },
     // 选这项发生变化触发这个函数
-    parentCateChange() {
+    parentCateChange () {
       // console.log(this.selectedKeys);
       if (this.selectedKeys.length > 0) {
         // 父级分类的ID
         this.addCateForm.cat_pid = this.selectedKeys[
           this.selectedKeys.length - 1
-        ];
+        ]
         // 为当前父类的等级赋值
-        this.addCateForm.cat_level = this.selectedKeys.length;
-        return;
+        this.addCateForm.cat_level = this.selectedKeys.length
       } else {
         // 父级分类的ID
-        this.addCateForm.cat_pid = 0;
+        this.addCateForm.cat_pid = 0
         // 为当前父类的等级赋值
-        this.addCateForm.cat_level = 0;
+        this.addCateForm.cat_level = 0
       }
     },
     // 点击按钮添加新的分类
-    addCate() {
+    addCate () {
       this.$refs.addCateFormRef.validate(async valid => {
-        if (!valid) return;
+        if (!valid) return
         const { data: res } = await this.$http.post(
-          "categories",
+          'categories',
           this.addCateForm
-        );
+        )
         if (res.meta.status !== 201) {
-          return this.$message.error("添加分类失败!");
+          return this.$message.error('添加分类失败!')
         }
-        this.$message.success("添加分类成功!");
-        this.getCateList();
-        this.addCateDialogVisible = false;
-      });
+        this.$message.success('添加分类成功!')
+        this.getCateList()
+        this.addCateDialogVisible = false
+      })
     },
     // 监听添加分类对话框关闭事件
-    addCateDialogClosed() {
-      this.$refs.addCateFormRef.resetFields();
-      this.selectedKeys = [];
+    addCateDialogClosed () {
+      this.$refs.addCateFormRef.resetFields()
+      this.selectedKeys = []
       // 父级分类的ID
-      this.addCateForm.cat_pid = 0;
+      this.addCateForm.cat_pid = 0
       // 为当前父类的等级赋值
-      this.addCateForm.cat_level = 0;
+      this.addCateForm.cat_level = 0
     },
     // 监听修改对话框关闭事件
-    editDialogClosed() {
-      this.$refs.editFormRef.resetFields();
+    editDialogClosed () {
+      this.$refs.editFormRef.resetFields()
     },
     // 展示编辑用户的对话框
-    async showEditDialog(id) {
-      console.log(id);
-      const { data: res } = await this.$http.get("categories/" + id);
+    async showEditDialog (id) {
+      console.log(id)
+      const { data: res } = await this.$http.get('categories/' + id)
       if (res.meta.status !== 200) {
-        return this.$message.error("查询分类信息失败!");
+        return this.$message.error('查询分类信息失败!')
       }
-      this.editForm = res.data;
-      this.editDialogVisible = true;
+      this.editForm = res.data
+      this.editDialogVisible = true
     },
-    editCateInfo() {
+    editCateInfo () {
       this.$refs.editFormRef.validate(async valid => {
         // console.log(valid);
-        if (!valid) return;
+        if (!valid) return
         const { data: res } = await this.$http.put(
-          "categories/" + this.editForm.cat_id,
+          'categories/' + this.editForm.cat_id,
           {
             cat_name: this.editForm.cat_name
           }
-        );
+        )
         if (res.meta.status !== 200) {
-          return this.$message.error("更新分类名称失败!");
+          return this.$message.error('更新分类名称失败!')
         }
         // 关闭对话框
-        this.editDialogVisible = false;
+        this.editDialogVisible = false
         // 刷新数据
-        this.getCateList();
+        this.getCateList()
         // 提示修改成功
-        this.$message.success("更新分类名称成功!");
-      });
+        this.$message.success('更新分类名称成功!')
+      })
     },
 
     // 根据ID删除用户的信息
-    async removeCateById(id) {
+    async removeCateById (id) {
       // 询问用户是否删除
       const confirmResult = await this.$confirm(
-        "此操作将永久删除该分类, 是否继续?",
-        "提示",
+        '此操作将永久删除该分类, 是否继续?',
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
-      ).catch(err => err);
+      ).catch(err => err)
 
-      if (confirmResult !== "confirm") {
-        return this.$message.info("已经取消删除");
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已经取消删除')
       }
-      const { data: res } = await this.$http.delete("categories/" + id);
+      const { data: res } = await this.$http.delete('categories/' + id)
       // console.log(id);
       if (res.meta.status != 200) {
-        return this.$message.error("删除用户失败!");
+        return this.$message.error('删除用户失败!')
       }
-      this.$message.success("删除用户成功!");
+      this.$message.success('删除用户成功!')
 
-      if (document.querySelectorAll(".el-card tbody tr").length === 1) {
+      if (document.querySelectorAll('.el-card tbody tr').length === 1) {
         this.queryInfo.pagenum =
-          this.queryInfo.pagenum > 1 ? this.queryInfo.pagenum - 1 : 1;
+          this.queryInfo.pagenum > 1 ? this.queryInfo.pagenum - 1 : 1
       }
-      this.getCateList();
+      this.getCateList()
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

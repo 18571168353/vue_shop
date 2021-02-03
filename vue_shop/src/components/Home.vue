@@ -64,54 +64,54 @@
 <script>
 import hub from '../utils/hub'
 export default {
-  data() {
+  data () {
     return {
       // 左侧菜单数据
       menulist: [],
       // arr:[],
       iconsObj: {
-        125: "iconfont icon-user",
-        103: "iconfont icon-tijikongjian",
-        101: "iconfont icon-shangpin",
-        102: "iconfont icon-danju",
-        145: "iconfont icon-baobiao"
+        125: 'iconfont icon-user',
+        103: 'iconfont icon-tijikongjian',
+        101: 'iconfont icon-shangpin',
+        102: 'iconfont icon-danju',
+        145: 'iconfont icon-baobiao'
       },
       // 是否折叠
       isCollapse: false,
       // 被激活的链接地址
-      activePath: ""
-    };
-  },
-  created() {
-    this.getMenuList();
-    this.activePath = window.sessionStorage.getItem("activePath");
-    hub.$on('saveNavState',this.saveNavState)
-  },
-  methods: {
-    logout() {
-      window.sessionStorage.clear();
-      this.$router.push("/login");
-    },
-    // 获取所有的菜单
-    async getMenuList() {
-      const { data: res } = await this.$http.get("menus");
-      if (res.meta.status !== 200) this.$message.error(res.meta.msg);
-      this.menulist = res.data;
-    },
-    toggleCollapse() {
-      this.isCollapse = !this.isCollapse;
-    },
-
-    saveNavState(activePath) {
-      window.sessionStorage.setItem("activePath", activePath);
-      this.activePath = activePath;
+      activePath: ''
     }
   },
-  beforeDestroy(){
+  created () {
+    this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath')
+    hub.$on('saveNavState', this.saveNavState)
+  },
+  methods: {
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.push('/login')
+    },
+    // 获取所有的菜单
+    async getMenuList () {
+      const { data: res } = await this.$http.get('menus')
+      if (res.meta.status !== 200) this.$message.error(res.meta.msg)
+      this.menulist = res.data
+    },
+    toggleCollapse () {
+      this.isCollapse = !this.isCollapse
+    },
+
+    saveNavState (activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
+    }
+  },
+  beforeDestroy () {
     // 移除事件监听,防止监听多次
     hub.$off('saveNavState')
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

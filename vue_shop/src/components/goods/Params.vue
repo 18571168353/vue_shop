@@ -233,21 +233,21 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       // 商品分类列表
       catelist: [],
       // 级联选择框的配置对象
       cateProps: {
-        value: "cat_id",
-        label: "cat_name",
-        children: "children",
-        expandTrigger: "hover"
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children',
+        expandTrigger: 'hover'
       },
       // 级联选择框双向绑定的数组
       selectedCateKeys: [],
       // 被激活的页签名称
-      activeName: "many",
+      activeName: 'many',
       // 动态参数的数据
       manyTableData: [],
       // 静态参数的数据
@@ -256,57 +256,57 @@ export default {
       addDialogVisible: false,
       // 添加参数的表单数据
       addForm: {
-        attr_name: ""
+        attr_name: ''
       },
       // 修改参数的表单数据
       editForm: {
-        attr_name: ""
+        attr_name: ''
       },
       // 添加表单的验证规则对象
       editFormRules: {
         attr_name: [
-          { required: true, message: "请输入参数名称", trigger: "blur" }
+          { required: true, message: '请输入参数名称', trigger: 'blur' }
         ]
       },
       // 添加表单的验证规则对象
       addFormRules: {
         attr_name: [
-          { required: true, message: "请输入参数名称", trigger: "blur" }
+          { required: true, message: '请输入参数名称', trigger: 'blur' }
         ]
       },
       // 修改对话框的显示与隐藏
       editDialogVisible: false
-    };
+    }
   },
-  created() {
-    this.getCateList();
+  created () {
+    this.getCateList()
   },
   methods: {
     //   获取所有的商品分类
-    async getCateList() {
-      const { data: res } = await this.$http.get("categories");
+    async getCateList () {
+      const { data: res } = await this.$http.get('categories')
       if (res.meta.status !== 200) {
-        return this.$message.error("获取商品分类失败!");
+        return this.$message.error('获取商品分类失败!')
       }
-      this.catelist = res.data;
+      this.catelist = res.data
     },
     // 选这项发生变化触发这个函数
-    handleChange() {
-      this.getParamsData();
+    handleChange () {
+      this.getParamsData()
     },
     // tab页签点击事件的处理函数
-    handleTabClick() {
-      console.log(this.activeName);
-      this.getParamsData();
+    handleTabClick () {
+      console.log(this.activeName)
+      this.getParamsData()
     },
     // 获取参数的列表数据
-    async getParamsData() {
+    async getParamsData () {
       if (this.selectedCateKeys.length !== 3) {
-        this.selectedCateKeys = [];
-        this.selectedCateKeys = [];
-        this.manyTableData = [];
-        this.onlyTableData = [];
-        return;
+        this.selectedCateKeys = []
+        this.selectedCateKeys = []
+        this.manyTableData = []
+        this.onlyTableData = []
+        return
       }
 
       // 根据所选分类的ID,和当前所处的面板,获取对应的参数
@@ -315,185 +315,185 @@ export default {
         {
           params: { sel: this.activeName }
         }
-      );
+      )
       if (res.meta.status !== 200) {
-        return this.$message.error("获取参数列表失败!");
+        return this.$message.error('获取参数列表失败!')
       }
       res.data.forEach(item => {
-        item.attr_vals = item.attr_vals ? item.attr_vals.split(" ") : [];
+        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
         // 控制文本框的显示与隐藏
-        item.inputVisible = false;
+        item.inputVisible = false
         // 文本框输入的值
-        item.inputValue = "";
-      });
-      if (this.activeName === "many") {
-        this.manyTableData = res.data;
+        item.inputValue = ''
+      })
+      if (this.activeName === 'many') {
+        this.manyTableData = res.data
       } else {
-        this.onlyTableData = res.data;
+        this.onlyTableData = res.data
       }
     },
     // 监听添加对话框的关闭事件
-    addDialogClose() {
-      this.$refs.addFormRef.resetFields();
+    addDialogClose () {
+      this.$refs.addFormRef.resetFields()
     },
     // 监听修改对话框的关闭事件
-    editDialogClose() {
-      this.$refs.editFormRef.resetFields();
+    editDialogClose () {
+      this.$refs.editFormRef.resetFields()
     },
     // 点击按钮,添加参数
-    addParams() {
+    addParams () {
       this.$refs.addFormRef.validate(async valid => {
-        if (!valid) return;
+        if (!valid) return
         const { data: res } = await this.$http.post(
           `categories/${this.cateId}/attributes`,
           {
             attr_name: this.addForm.attr_name,
             attr_sel: this.activeName
           }
-        );
+        )
         if (res.meta.status !== 201) {
-          return this.$message.error("添加参数失败!");
+          return this.$message.error('添加参数失败!')
         }
-        this.$message.success("添加参数成功!");
-        this.addDialogVisible = false;
-        this.getParamsData();
-      });
+        this.$message.success('添加参数成功!')
+        this.addDialogVisible = false
+        this.getParamsData()
+      })
     },
     // 点击按钮,修改参数信息
-    editParams() {
+    editParams () {
       this.$refs.editFormRef.validate(async valid => {
-        if (!valid) return;
+        if (!valid) return
         const { data: res } = await this.$http.put(
           `categories/${this.cateId}/attributes/${this.editForm.attr_id}`,
           {
             attr_name: this.editForm.attr_name,
             attr_sel: this.activeName
           }
-        );
+        )
         if (res.meta.status !== 200) {
-          return this.$message.error("修改参数失败!");
+          return this.$message.error('修改参数失败!')
         }
-        this.$message.success("修改参数成功!");
-        this.editDialogVisible = false;
-        this.getParamsData();
-      });
+        this.$message.success('修改参数成功!')
+        this.editDialogVisible = false
+        this.getParamsData()
+      })
     },
     // 点击按钮,修改对话框
-    async showEditDialog(attr_id) {
+    async showEditDialog (attr_id) {
       // 查询当前参数的信息
       const {
         data: res
       } = await this.$http.get(
         `categories/${this.cateId}/attributes/${attr_id}`,
         { params: { attr_sel: this.activeName } }
-      );
+      )
       if (res.meta.status !== 200) {
-        return this.$message.error("获取参数信息失败!");
+        return this.$message.error('获取参数信息失败!')
       }
-      this.editForm = res.data;
-      this.editDialogVisible = true;
+      this.editForm = res.data
+      this.editDialogVisible = true
     },
     // 根据id删除对应的参数项
-    async removeParams(attrid) {
+    async removeParams (attrid) {
       const confirmResult = await this.$confirm(
-        "此操作将永久删除该参数, 是否继续?",
-        "提示",
+        '此操作将永久删除该参数, 是否继续?',
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
-      ).catch(err => err);
+      ).catch(err => err)
       // 用户取消了删除的操作
-      if (confirmResult !== "confirm") {
-        return this.$message.info("已取消删除");
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已取消删除')
       }
       // 确认删除
       const { data: res } = await this.$http.delete(
         `categories/${this.cateId}/attributes/${attrid}`
-      );
+      )
       if (res.meta.status !== 200) {
-        return this.$message.error("删除参数失败!");
+        return this.$message.error('删除参数失败!')
       }
-      this.$message.success("删除参数成功!");
-      this.getParamsData();
+      this.$message.success('删除参数成功!')
+      this.getParamsData()
     },
     // 文本框或摁下了enter都会触发
-    async handleInputConfirm(row) {
+    async handleInputConfirm (row) {
       if (row.inputValue.trim().length === 0) {
-        row.inputValue = "";
-        row.inputVisible = false;
-        return;
+        row.inputValue = ''
+        row.inputVisible = false
+        return
       }
       // 如果没有return则证明输入的内容需要做后续的处理
-      row.attr_vals.push(row.inputValue.trim());
-      row.inputValue = "";
-      row.inputVisible = false;
+      row.attr_vals.push(row.inputValue.trim())
+      row.inputValue = ''
+      row.inputVisible = false
       // 需要发起请求,保存操作
-      this.saveAttrVals(row);
+      this.saveAttrVals(row)
     },
     // 将对attr_vals的操作,保存到数据库
-    async saveAttrVals(row) {
+    async saveAttrVals (row) {
       if (row.inputValue.trim().length === 0) {
-        row.inputValue = "";
-        row.inputVisible = false;
-        return;
+        row.inputValue = ''
+        row.inputVisible = false
+        return
       }
       // 如果没有return则证明输入的内容需要做后续的处理
-      row.attr_vals.push(row.inputValue.trim());
-      row.inputValue = "";
-      row.inputVisible = false;
+      row.attr_vals.push(row.inputValue.trim())
+      row.inputValue = ''
+      row.inputVisible = false
       // 需要发起请求,保存操作
       const { data: res } = await this.$http.put(
         `categories/${this.cateId}/attributes/${row.attr_id}`,
         {
           attr_name: row.attr_name,
           attr_sel: row.attr_sel,
-          attr_vals: row.attr_vals.join(" ")
+          attr_vals: row.attr_vals.join(' ')
         }
-      );
+      )
       if (res.meta.status !== 200) {
-        return this.$message.error("修改参数项失败!");
+        return this.$message.error('修改参数项失败!')
       }
-      this.$message.success("修改参数项成功!");
+      this.$message.success('修改参数项成功!')
     },
-    showInput(row) {
-      row.inputVisible = true;
+    showInput (row) {
+      row.inputVisible = true
       // 让文本框自动获得焦点
       this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus();
-      });
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
     },
     // 删除
-    handleClose(i, row) {
-      row.attr_vals.splice(i, 1);
-      this.saveAttrVals(row);
+    handleClose (i, row) {
+      row.attr_vals.splice(i, 1)
+      this.saveAttrVals(row)
     }
   },
   computed: {
     //   如果按钮需要被禁用,就返回true,否则返回false
-    isBtnDisabled() {
+    isBtnDisabled () {
       if (this.selectedCateKeys.length !== 3) {
-        return true;
+        return true
       }
-      return false;
+      return false
     },
     // 当前选中的三级分类的ID
-    cateId() {
+    cateId () {
       if (this.selectedCateKeys.length === 3) {
-        return this.selectedCateKeys[2];
+        return this.selectedCateKeys[2]
       }
-      return null;
+      return null
     },
     // 动态计算标题的文本
-    titleText() {
-      if (this.activeName === "many") {
-        return "动态参数";
+    titleText () {
+      if (this.activeName === 'many') {
+        return '动态参数'
       }
-      return "静态属性";
+      return '静态属性'
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
