@@ -34,12 +34,7 @@
         <el-step title="完成"></el-step>
       </el-steps>
       <!-- tab栏区域 -->
-      <el-form
-        :model="addForm"
-        :rules="addFormRules"
-        ref="addFormRef"
-        label-width="100px"
-      >
+      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef">
         <el-tabs
           v-model="activeIndex"
           :tab-position="'left'"
@@ -47,7 +42,7 @@
           :before-leave="beforeTabLeave"
           @tab-click="tabClicked"
         >
-          <el-tab-pane label="用户管理" name="0">
+          <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="addForm.goods_name"></el-input>
             </el-form-item>
@@ -70,7 +65,7 @@
               ></el-cascader>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="配置管理" name="1">
+          <el-tab-pane label="商品参数" name="1">
             <!-- 渲染表单的Item项 -->
             <el-form-item
               :label="item.attr_name"
@@ -88,17 +83,16 @@
               </el-checkbox-group>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="角色管理" name="2">
+          <el-tab-pane label="商品属性" name="2">
             <el-form-item
               :label="item.attr_name"
               v-for="item in onlyTabData"
               :key="item.attr_id"
-              label-width="auto"
             >
               <el-input v-model="item.attr_vals"></el-input>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="定时任务" name="3">
+          <el-tab-pane label="商品图片" name="3">
             <el-upload
               :action="uploadURL"
               :on-preview="handlePreview"
@@ -110,8 +104,7 @@
               <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </el-tab-pane>
-
-          <el-tab-pane label="定时任务" name="4">
+          <el-tab-pane label="商品内容" name="4">
             <!-- 富文本编辑器组件 -->
             <quill-editor v-model="addForm.goods_introduce"> </quill-editor>
             <!-- 添加商品按钮 -->
@@ -130,14 +123,14 @@
   </div>
 </template>
 <script>
-import _ from "lodash";
+import _ from 'lodash'
 export default {
   data() {
     return {
-      activeIndex: "0",
+      activeIndex: '0',
       // 添加商品的表单数据对象
       addForm: {
-        goods_name: "",
+        goods_name: '',
         goods_price: 0,
         goods_weight: 0,
         goods_number: 0,
@@ -146,168 +139,168 @@ export default {
         // 图片的数组
         pics: [],
         // 商品的详情描述
-        goods_introduce: "",
+        goods_introduce: '',
         attrs: []
       },
       addFormRules: {
         goods_name: [
-          { required: true, message: "请输入商品名称", trigger: "blur" }
+          { required: true, message: '请输入商品名称', trigger: 'blur' }
         ],
         goods_price: [
-          { required: true, message: "请输入商品价格", trigger: "blur" }
+          { required: true, message: '请输入商品价格', trigger: 'blur' }
         ],
         goods_weight: [
-          { required: true, message: "请输入商品重量", trigger: "blur" }
+          { required: true, message: '请输入商品重量', trigger: 'blur' }
         ],
         goods_number: [
-          { required: true, message: "请输入商品数量", trigger: "blur" }
+          { required: true, message: '请输入商品数量', trigger: 'blur' }
         ],
-        goods_cat: [{ required: true, message: "请输入商品", trigger: "blur" }]
+        goods_cat: [{ required: true, message: '请输入商品', trigger: 'blur' }]
       },
       //   商品分类数据
       catelist: [],
       cateProps: {
-        label: "cat_name",
-        value: "cat_id",
-        children: "children"
+        label: 'cat_name',
+        value: 'cat_id',
+        children: 'children'
       },
       // 动态参数列表
       manyTabData: [],
       // 静态属性列表
       onlyTabData: [],
       // 上传图片的URL地址
-      uploadURL: "http://127.0.0.1:8888/api/private/v1/upload",
+      uploadURL: 'http://127.0.0.1:8888/api/private/v1/upload',
       // 图片上传组件的headers请求头对象
       headerObj: {
-        Authorization: window.sessionStorage.getItem("token")
+        Authorization: window.sessionStorage.getItem('token')
       },
       // 图片路径
-      previewPath: "",
+      previewPath: '',
       // 图片对话框显示与隐藏
       previewVisible: false
-    };
+    }
   },
   created() {
-    this.getCateList();
+    this.getCateList()
   },
   methods: {
     async getCateList() {
-      const { data: res } = await this.$http.get("categories");
+      const { data: res } = await this.$http.get('categories')
       if (res.meta.status !== 200) {
-        return this.$message.error("获取商品分类数据列表失败");
+        return this.$message.error('获取商品分类数据列表失败')
       }
-      this.catelist = res.data;
+      this.catelist = res.data
     },
     // 级联选择器选中项发生变化会触发这项
     handleChange() {
       if (this.addForm.goods_cat.length !== 3) {
-        this.this.addForm.goods_cat = [];
+        this.this.addForm.goods_cat = []
       }
     },
     beforeTabLeave(activeName, oldActivename) {
       // console.log('即将离开的标签页名称是'+oldActivename);
       // console.log('即将进入的标签页名称是'+activeName);
-      if (this.addForm.goods_cat.length !== 3 && oldActivename === "0") {
-        this.$message.error("请先选择商品分类!");
-        return false;
+      if (this.addForm.goods_cat.length !== 3 && oldActivename === '0') {
+        this.$message.error('请先选择商品分类!')
+        return false
       }
     },
     async tabClicked() {
       // console.log(this.activeIndex);
       // 证明访问的是动态参数面板
-      if (this.activeIndex === "1") {
+      if (this.activeIndex === '1') {
         const { data: res } = await this.$http.get(
           `categories/${this.cateId}/attributes`,
           {
-            params: { sel: "many" }
+            params: { sel: 'many' }
           }
-        );
+        )
         if (res.meta.status !== 200) {
-          return this.$message.error("获取分类参数失败!");
+          return this.$message.error('获取分类参数失败!')
         }
         // this.$message.success("成功");
-        console.log(res.data);
+        console.log(res.data)
         res.data.forEach(item => {
           item.attr_vals =
-            item.attr_vals.length === 0 ? [] : item.attr_vals.split(" ");
-        });
-        this.manyTabData = res.data;
-      } else if (this.activeIndex === "2") {
+            item.attr_vals.length === 0 ? [] : item.attr_vals.split(' ')
+        })
+        this.manyTabData = res.data
+      } else if (this.activeIndex === '2') {
         const { data: res } = await this.$http.get(
           `categories/${this.cateId}/attributes`,
           {
-            params: { sel: "only" }
+            params: { sel: 'only' }
           }
-        );
+        )
         if (res.meta.status !== 200) {
-          return this.$message.error("获取静态属性失败!");
+          return this.$message.error('获取静态属性失败!')
         }
-        console.log(res.data);
-        this.onlyTabData = res.data;
+        console.log(res.data)
+        this.onlyTabData = res.data
       }
     },
     // 处理图片预览效果
     handlePreview(file) {
-      this.previewPath = file.response.data.url;
-      this.previewVisible = true;
+      this.previewPath = file.response.data.url
+      this.previewVisible = true
     },
     // 处理移除图片的操作
     handleRemove(file) {
       // 1获取要删除图片的路径
-      const filePath = file.response.data.tem_path;
+      const filePath = file.response.data.tem_path
       // 2找到对应的索引
-      const i = this.addForm.pics.findIndex(x => x.pic === filePath);
+      const i = this.addForm.pics.findIndex(x => x.pic === filePath)
       // 3.移除
-      this.addForm.pics.splice(i, 1);
+      this.addForm.pics.splice(i, 1)
     },
     // 图片文件上传成功的操作
     handleSuccess(response) {
       // console.log(response);
-      const picInfo = { pic: response.data.tmp_path };
-      this.addForm.pics.push(picInfo);
+      const picInfo = { pic: response.data.tmp_path }
+      this.addForm.pics.push(picInfo)
     },
     add() {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) {
-          return this.$message.error("请填写必要的表单项!");
+          return this.$message.error('请填写必要的表单项!')
         }
-        const form = _.cloneDeep(this.addForm);
-        form.goods_cat = form.goods_cat.join(",");
+        const form = _.cloneDeep(this.addForm)
+        form.goods_cat = form.goods_cat.join(',')
         this.manyTabData.forEach(item => {
           const newInfo = {
             attr_id: item.attr_id,
-            attr_value: item.attr_vals.join(" ")
-          };
-          this.addForm.attrs.push(newInfo);
-        });
+            attr_value: item.attr_vals.join(' ')
+          }
+          this.addForm.attrs.push(newInfo)
+        })
         this.onlyTabData.forEach(item => {
           const newInfo = {
             attr_id: item.attr_id,
             attr_value: item.attr_vals
-          };
-          this.addForm.attrs.push(newInfo);
-        });
-        form.attrs = this.addForm.attrs;
-        console.log(form);
+          }
+          this.addForm.attrs.push(newInfo)
+        })
+        form.attrs = this.addForm.attrs
+        // console.log(form)
         // 发起请求添加商品
-        const { data: res } = await this.$http.post("goods", form);
+        const { data: res } = await this.$http.post('goods', form)
         if (res.meta.status !== 201) {
-          return this.$message.error("添加商品失败");
+          return this.$message.error('添加商品失败')
         }
-        this.$message.success("添加商品成功");
-        this.$router.push("/goods");
-      });
+        this.$message.success('添加商品成功')
+        this.$router.push('/goods')
+      })
     }
   },
   computed: {
     cateId() {
       if (this.addForm.goods_cat.length === 3) {
-        return this.addForm.goods_cat[2];
+        return this.addForm.goods_cat[2]
       }
-      return null;
+      return null
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .el-checkbox {
