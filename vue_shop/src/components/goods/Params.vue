@@ -379,12 +379,12 @@ export default {
       })
     },
     // 点击按钮,修改对话框
-    async showEditDialog (attr_id) {
+    async showEditDialog (attrId) {
       // 查询当前参数的信息
       const {
         data: res
       } = await this.$http.get(
-        `categories/${this.cateId}/attributes/${attr_id}`,
+        `categories/${this.cateId}/attributes/${attrId}`,
         { params: { attr_sel: this.activeName } }
       )
       if (res.meta.status !== 200) {
@@ -445,7 +445,7 @@ export default {
       row.inputVisible = false
       // 需要发起请求,保存操作
       const { data: res } = await this.$http.put(
-        `categories/${this.cateId}/attributes/${row.attr_id}`,
+        `categories/${this.cateId}/attributes/${row.attrId}`,
         {
           attr_name: row.attr_name,
           attr_sel: row.attr_sel,

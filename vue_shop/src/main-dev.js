@@ -19,16 +19,24 @@ import "quill/dist/quill.core.css"; // import styles
 import "quill/dist/quill.snow.css"; // for snow theme
 import "quill/dist/quill.bubble.css"; // for bubble theme
 
+// 导入NProgress包对应的js和css
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 // 配置请求根路径
 axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/";
 
 // 请求拦截器
 axios.interceptors.request.use(config => {
+  // 在request拦截器中展示进度条
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem("token");
   return config;
 });
 // 响应拦截器
 axios.interceptors.response.use(res => {
+  // 在response拦截器中隐藏进度条
+  NProgress.done()
   if (res.data.meta.msg === "无效token" && res.data.meta.status === 400) {
     location.href = "/#/login";
   }
